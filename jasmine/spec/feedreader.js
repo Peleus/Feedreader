@@ -30,8 +30,9 @@ $(function() {
         /* Loop through all feeds and verify it has a URL.*/
         it('Each feed has a URL', function(){
             
-            allFeeds.forEach(function() {
-                expect(allFeeds.url).not.toBeNull();
+            allFeeds.forEach(function(feed) {
+                expect(feed.url).toBeDefined();
+                expect(feed.url.length).not.toBe(0);
             });
             
         });
@@ -42,8 +43,9 @@ $(function() {
          * and that the name is not empty.
          */
         it('Each feed has a Name', function(){
-            allFeeds.forEach(function() {
-                expect(allFeeds.name).not.toBeNull();
+            allFeeds.forEach(function(feed) {
+                expect(feed.name).toBeDefined();
+                expect(feed.name.length).not.toBe(0);
             });
         });
         
@@ -61,7 +63,7 @@ $(function() {
               
               var menuItem = document.getElementsByClassName('menu-hidden');
               
-              expect(menuItem).not.toBeNull();
+              expect(menuItem.length).not.toBe(0);
           });
 
          /* TODO: Write a test that ensures the menu changes
@@ -70,14 +72,12 @@ $(function() {
           * clicked and does it hide when clicked again.
           */
           it('The menu toggles visibility', function(){
-          
             var menuButton = $('.menu-icon-link');
               $('.menu-icon-link').trigger('click');
-              expect(document.body.className).not.toBe('menu-hidden');
+              expect($(document.body).hasClass('menu-hidden')).toBe(false);
               $('.menu-icon-link').trigger('click');
-              expect(document.body.className).toBe('menu-hidden');
+              expect($(document.body).hasClass('menu-hidden')).toBe(true);
           });
-          
         });
 
     /* TODO: Write a new test suite named "Initial Entries" */
@@ -97,7 +97,7 @@ $(function() {
         });
         
         it('It should have at least one entry field in the feed container', function(done){
-            expect(feed.children()).toBeDefined();
+            expect(feed.children().length).not.toBe(0);
             done();
         });
     });
@@ -107,20 +107,19 @@ $(function() {
          * by the loadFeed function that the content actually changes.
          * Remember, loadFeed() is asynchronous.
          */
-        var feedChildren = $('.feed').children().text();
-        console.log(feedChildren);
-        
-        
-        beforeEach(function(done){
-            loadFeed(1, done);
-            
-            
+       var feedChildren, feedChildrenRevised;
+        beforeEach(function(done) {
+            loadFeed(0, function() {
+                feedChildren = $('.feed').children().text();
+                loadFeed(1, function() {
+                    feedChildrenRevised = $('.feed').children().text();
+                    done();
+                });
+            });
         });
         
-        it('It should load new content when content actually changes.', function(done){
-            var feedChildrenRevised = $('.feed').children().text();
+        it('It should load new content when content actually changes.', function(){
             expect(feedChildren).not.toBe(feedChildrenRevised);
-            done();
     });
     });
 }());
