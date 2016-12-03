@@ -2,7 +2,7 @@
 
 ## About
 
-Theis site was a challenge to create unit tests for the feedreader using Jasmine.
+This site was a challenge to create unit tests for the feedreader using Jasmine.
 
 ## Usage
 
